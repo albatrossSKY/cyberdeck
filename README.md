@@ -4,6 +4,10 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
+
+![Cyberdeck Demo](https://raw.githubusercontent.com/albatrossSKY/cyberdeck/refs/heads/main/cyberdeck.gif)
+
+
 A cross-platform, highly modular, terminal-based system health and data dashboard. 
 
 Built with [Textual](https://github.com/Textualize/textual), Cyberdeck transforms your standard terminal into a high-density matrix display, providing real-time system diagnostics, network latency, local weather, and live asset tracking—all without the flicker of traditional CLI loops.
@@ -25,3 +29,4 @@ Built with [Textual](https://github.com/Textualize/textual), Cyberdeck transform
    ```bash
    git clone [https://github.com/yourusername/cyberdeck.git](https://github.com/yourusername/cyberdeck.git)
    cd cyberdeck
+
