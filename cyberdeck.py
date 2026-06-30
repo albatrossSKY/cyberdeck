@@ -3,6 +3,7 @@ import psutil
 import requests
 import time
 import socket
+from textual import work
 from textual.app import App, ComposeResult
 from textual.containers import Grid
 from textual.widgets import Header, Footer, Static
@@ -113,13 +114,14 @@ class WeatherModule(Static):
         self.update_weather()
         self.set_interval(600, self.update_weather) # Update every 10 mins
 
+    @work(thread=True)
     def update_weather(self) -> None:
         try:
             # Hitting the root URL without a location forces IP auto-detection
             res = requests.get("https://wttr.in/?format=3", timeout=3).text.strip()
-            self.update(f"[b]>> ATMOSPHERIC SENSORS[/b]\n\nSTATUS: {res}")
+            self.app.call_from_thread(self.update, f"[b]>> ATMOSPHERIC SENSORS[/b]\n\nSTATUS: {res}")
         except Exception:
-            self.update(f"[b]>> ATMOSPHERIC SENSORS[/b]\n\nSTATUS: [red]OFFLINE[/red]")
+            self.app.call_from_thread(self.update, f"[b]>> ATMOSPHERIC SENSORS[/b]\n\nSTATUS: [red]OFFLINE[/red]")
 
 class CryptoTicker(Static):
     """Live asset uplink with fixed decimal formatting"""
@@ -127,6 +129,7 @@ class CryptoTicker(Static):
         self.update_crypto()
         self.set_interval(300, self.update_crypto)
 
+    @work(thread=True)
     def update_crypto(self) -> None:
         assets = CONFIG["crypto_assets"]
         try:
@@ -139,9 +142,9 @@ class CryptoTicker(Static):
                 # Formats to 8 decimal places to avoid scientific notation
                 price = f"${data['usd']:.8f}".rstrip('0').rstrip('.') 
                 output += f"{asset.upper()}: {price}\n"
-            self.update(output)
+            self.app.call_from_thread(self.update, output)
         except Exception:
-            self.update("[b]>> ASSET UPLINK[/b]\n\n[red]FEED DISCONNECTED[/red]")
+            self.app.call_from_thread(self.update, "[b]>> ASSET UPLINK[/b]\n\n[red]FEED DISCONNECTED[/red]")
 
 class NetworkPing(Static):
     """Permissionless cross-platform latency check using TCP Port 53"""
@@ -149,6 +152,7 @@ class NetworkPing(Static):
         self.update_ping()
         self.set_interval(CONFIG["refresh_rate_net"], self.update_ping)
 
+    @work(thread=True)
     def update_ping(self) -> None:
         target = CONFIG["ping_target"]
         try:
@@ -161,9 +165,9 @@ class NetworkPing(Static):
             latency = int((time.time() - start) * 1000)
             
             color = "green" if latency < 100 else "yellow"
-            self.update(f"[b]>> SATELLITE UPLINK[/b]\n\nTARGET: {target}\nLATENCY: [{color}]{latency} ms[/{color}]")
+            self.app.call_from_thread(self.update, f"[b]>> SATELLITE UPLINK[/b]\n\nTARGET: {target}\nLATENCY: [{color}]{latency} ms[/{color}]")
         except Exception:
-            self.update(f"[b]>> SATELLITE UPLINK[/b]\n\nTARGET: {target}\nLATENCY: [red]TIMEOUT/OFFLINE[/red]")
+            self.app.call_from_thread(self.update, f"[b]>> SATELLITE UPLINK[/b]\n\nTARGET: {target}\nLATENCY: [red]TIMEOUT/OFFLINE[/red]")
 
 
 # ----------------------------------------------------------------------
