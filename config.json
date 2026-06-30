@@ -1,0 +1,8 @@
+{
+    "node_name": "CYBER-01",
+    "theme": "matrix",
+    "crypto_assets": "bitcoin,ethereum,shiba-inu",
+    "ping_target": "8.8.8.8",
+    "refresh_rate_sys": 1.0,
+    "refresh_rate_net": 15.0
+}
